@@ -671,6 +671,23 @@ int ssh_options_set(ssh_session session, enum ssh_options_e type,
   return 0;
 }
 
+int ssh_options_get(ssh_session session, enum ssh_options_e type, const void *value)
+{
+  switch(type)
+  {
+    case SSH_OPTIONS_PORT: {
+      int *port;
+      port  = (int *) value;
+      *port = session->port;
+      break;
+    }
+    default:
+      ssh_set_error(session, SSH_REQUEST_DENIED, "Unknown ssh option %d", type);
+      return -1;
+    break;
+  }
+  return 0;
+}
 
 /**
  * @brief Parse command line arguments.

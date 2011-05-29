@@ -54,6 +54,15 @@ static void torture_options_set_port(void **state) {
     assert_true(session->port == 22);
 }
 
+static void torture_options_get_port(void **state) {
+  ssh_session session = *state;
+  unsigned int port = 1234;
+  assert_false(ssh_options_set(session, SSH_OPTIONS_PORT, &port));
+  port = 0;
+  assert_false(ssh_options_get(session, SSH_OPTIONS_PORT, &port));
+  assert_int_equal(port, 1234);
+}
+
 static void torture_options_set_fd(void **state) {
     ssh_session session = *state;
     socket_t fd = 42;
@@ -124,6 +133,7 @@ int torture_run_tests(void) {
     const UnitTest tests[] = {
         unit_test_setup_teardown(torture_options_set_host, setup, teardown),
         unit_test_setup_teardown(torture_options_set_port, setup, teardown),
+        unit_test_setup_teardown(torture_options_get_port, setup, teardown),
         unit_test_setup_teardown(torture_options_set_fd, setup, teardown),
         unit_test_setup_teardown(torture_options_set_user, setup, teardown),
         unit_test_setup_teardown(torture_options_set_identity, setup, teardown),
